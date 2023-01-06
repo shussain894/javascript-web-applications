@@ -1,8 +1,11 @@
-const notesModel = require("./notesModel")
-const note = new notesModel()
+const NotesClient = require("./backend-server/notesClient");
+const NotesModel = require('./notesModel');
+const NotesView = require('./notesView');
 
-note.addNotes('Buy milk')
-note.addNotes('Go to gym')
+console.log('The notes app is running');
 
-console.log('The notes app is running')
-console.log(note.getNotes())
+const client = new NotesClient();
+const model = new NotesModel();
+const view = new NotesView(model, client);
+
+view.displayNotesFromApi();

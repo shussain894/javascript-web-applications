@@ -16,6 +16,12 @@
           newParagraph.innerText = "newly created paragraph";
           this.mainContainerEl.append(newParagraph);
         }
+        clearParagraphs() {
+          const allParagraphs = document.querySelectorAll("p");
+          allParagraphs.forEach((paragraph) => {
+            paragraph.remove();
+          });
+        }
       };
       module.exports = View2;
     }
@@ -25,4 +31,5 @@
   var View = require_view();
   var view = new View();
   view.addParagraph();
+  view.clearParagraphs();
 })();
