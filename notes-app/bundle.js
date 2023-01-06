@@ -8,10 +8,17 @@
   var require_notesClient = __commonJS({
     "backend-server/notesClient.js"(exports, module) {
       var NotesClient2 = class {
-        loadNotes(callback) {
-          fetch("http://localhost:3000/notes").then((response) => response.json()).then((data) => {
-            callback(data);
-          });
+        loadNotes(callback, errorCallback) {
+          fetch("http://localhost:3000/notes").then((response) => response.json()).then((data) => callback(data)).catch((error) => errorCallback(error));
+        }
+        createNote(note, errorCallback) {
+          fetch("http://localhost:3000/notes", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ "content": note })
+          }).catch((error) => errorCallback(error));
         }
       };
       module.exports = NotesClient2;
@@ -53,6 +60,9 @@
           document.querySelector("#note-button").addEventListener("click", () => {
             const newNote = document.querySelector("#note-input").value;
             this.addNewNote(newNote);
+            this.client.createNote(newNote, () => {
+              this.displayError();
+            });
           });
         }
         addNewNote(newNote) {
@@ -79,6 +89,12 @@
             }
           );
         }
+        displayError() {
+          const errorElement = document.createElement("div");
+          errorElement.className = "error";
+          errorElement.textContent = "Oops, something went wrong!";
+          this.mainContainerEl.append(errorElement);
+        }
       };
       module.exports = NotesView2;
     }
@@ -92,5 +108,10 @@
   var client = new NotesClient();
   var model = new NotesModel();
   var view = new NotesView(model, client);
-  view.displayNotesFromApi();
+  client.loadNotes((notes) => {
+    model.setNotes(notes);
+    view.displayNotes();
+  }, () => {
+    view.displayError();
+  });
 })();

@@ -25,6 +25,7 @@ describe('Notes view', () => {
 
     expect(document.querySelectorAll('div.note').length).toEqual(2);
   });
+
   it('clicks the button and adds the note', () => {
 
     const input = document.querySelector('#note-input');
@@ -36,6 +37,7 @@ describe('Notes view', () => {
     expect(document.querySelectorAll('div.note').length).toEqual(1);
     expect(document.querySelectorAll('div.note')[0].textContent).toEqual('My first new note');
   });
+
   it('displays the correct number of notes', () => {
 
     model.addNotes('This is my first note')
@@ -67,4 +69,10 @@ describe('Notes view', () => {
     expect(divs[1].textContent).toEqual('fake note 2');
     done();
   });
+
+  it('displays error if theres no connection to database', () => {
+    view.displayError()
+    expect(document.querySelector('div.error').textContent).toBe('Oops, something went wrong!')
+  });
+
 });
